@@ -5,8 +5,8 @@ import urllib2
 import os
 import sys
 
-print "fetching msg from " + sys.argv[1] + "\n"
-url = re.sub("#/", "", sys.argv[1])
+print "fetching message from " + sys.argv[1] + "\n"
+url = sys.argv[1]
 r   = requests.get(url)
 contents = r.text
 res = r'<ul class="f-hide">(.*?)</ul>'
@@ -55,11 +55,12 @@ for value in mm:
     songname = d["data"]["songList"][0]["songName"]
     artistName = d["data"]["songList"][0]["artistName"]
     filename = "./" + songdir + "/"+songname+"-"+artistName+".flac"
+    
     print filename + " is downloading now ......\n\n"
-
+        
     f = urllib2.urlopen(songlink)
     with open(filename, "wb") as code:
         code.write(f.read())
 
-print "\n================================================================"
-print "\nDownload finish!\nSongs' directory is " + os.getcwd() + "/songs_dir"
+    if os.path.getsize(filename) < 10000 * 1024: #Source from http://stackoverflow.com/questions/8626325/most-efficient-way-to-delete-a-file-if-its-below-a-certain-size
+        os.remove(filename)
